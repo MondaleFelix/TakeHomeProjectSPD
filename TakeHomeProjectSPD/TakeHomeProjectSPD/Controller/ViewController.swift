@@ -18,22 +18,23 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getWeatherData()
         configure()
+        getWeatherData()
+        view.backgroundColor = .systemTeal
     }
 
 
     private func configure(){
         stackView.backgroundColor = .red
 
+        stackView.alignment = .center
         stackView.addArrangedSubview(weatherImageView)
         stackView.addArrangedSubview(descriptionLabel)
         stackView.addArrangedSubview(moodLabel)
         stackView.addArrangedSubview(emojiLabal)
-
-        descriptionLabel.backgroundColor = .red
-        moodLabel.backgroundColor = .green
-        emojiLabal.backgroundColor = .blue
+        
+        
+        moodLabel.text = "Mood:"
 
         view.addSubview(stackView)
         stackView.axis = .vertical
@@ -58,7 +59,9 @@ class ViewController: UIViewController {
             switch result {
                 
             case .success(let weather):
-                print(weather)
+                DispatchQueue.main.async {
+                    self.descriptionLabel.text = weather.description
+                }
             case .failure(let error):
                 
                 print(error.rawValue)
