@@ -10,28 +10,59 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var weatherImageView = UIImageView()
+    var descriptionLabel = UILabel()
+    let moodLabel = UILabel()
+    var emojiLabal = UILabel()
+    var stackView = UIStackView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
         getWeatherData()
+        configure()
     }
 
 
+    private func configure(){
+        stackView.backgroundColor = .red
+
+        stackView.addArrangedSubview(weatherImageView)
+        stackView.addArrangedSubview(descriptionLabel)
+        stackView.addArrangedSubview(moodLabel)
+        stackView.addArrangedSubview(emojiLabal)
+
+        descriptionLabel.backgroundColor = .red
+        moodLabel.backgroundColor = .green
+        emojiLabal.backgroundColor = .blue
+
+        view.addSubview(stackView)
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+        ])
+    }
+    
+    
     func getWeatherData(){
         NetworkManager.shared.getWeather() { [weak self] (result) in
             
             guard let self = self else { return }
             
             switch result {
-            case .success(let articles):
-                print("This is passing")
-            case .failure(let error):
-                print("This shit is failing")
-                print(error.rawValue)
                 
-//                let alert = UIAlertController(title: "Error", message: error.rawValue, preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-//                self.present(alert,animated: true)
+            case .success(let weather):
+                print(weather)
+            case .failure(let error):
+                
+                print(error.rawValue)
+
             }
         }
     }

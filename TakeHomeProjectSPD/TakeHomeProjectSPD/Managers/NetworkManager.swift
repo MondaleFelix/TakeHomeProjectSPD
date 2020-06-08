@@ -16,7 +16,7 @@ class NetworkManager {
     
     let baseURL = "https://api.openweathermap.org/data/2.5/weather?q=San%20Francisco&appid=f885ab78fd098417a205af6a335c80b9"
     
-    func getWeather(completed: @escaping(Result<Weather, ErrorMessage>) ->Void){
+    func getWeather(completed: @escaping(Result<WeatherData, ErrorMessage>) ->Void){
         
         // Returns if URL is invalid
         guard let url = URL(string: baseURL) else {
@@ -50,10 +50,9 @@ class NetworkManager {
             do {
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(Weather.self, from: data)
-                print(response)
+                let weather = response.weather[0]
                 
-                
-//                completed(.success(weather))
+                completed(.success(weather))
                 
             } catch {
                 completed(.failure(.invalidData))
