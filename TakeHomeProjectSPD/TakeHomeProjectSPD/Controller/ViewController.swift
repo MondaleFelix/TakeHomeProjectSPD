@@ -12,8 +12,9 @@ class ViewController: UIViewController {
 
     var weatherImageView = UIImageView()
     var descriptionLabel = UILabel()
-    let moodLabel = UILabel()
-    var emojiLabal = UILabel()
+    var moodLabel = UILabel()
+
+    var textField = UITextField()
     var stackView = UIStackView()
     
     override func viewDidLoad() {
@@ -21,6 +22,7 @@ class ViewController: UIViewController {
         configure()
         getWeatherData()
         view.backgroundColor = .systemTeal
+        createDimissKeyboardTapGesture()
     }
 
 
@@ -31,16 +33,16 @@ class ViewController: UIViewController {
         stackView.addArrangedSubview(weatherImageView)
         stackView.addArrangedSubview(descriptionLabel)
         stackView.addArrangedSubview(moodLabel)
-        stackView.addArrangedSubview(emojiLabal)
+        stackView.addArrangedSubview(textField)
         
-        
+        textField.delegate = self
+        textField.placeholder = "Enter a mood: "
         moodLabel.text = "Mood:"
-
         view.addSubview(stackView)
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -69,5 +71,26 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    func createDimissKeyboardTapGesture(){
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tap)
+    }
 }
 
+    
+
+
+extension ViewController : UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print(textField.text!)
+        
+        
+        self.moodLabel.text = "Mood: " + textField.text!
+        
+        textField.placeholder = "Enter a mood: "
+        self.view.endEditing(true)
+        return true
+    }
+    
+}
